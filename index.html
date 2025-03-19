@@ -74,7 +74,8 @@
 
             document.getElementById('result').innerHTML = '<p style="color: red; font-weight: bold;">Please wait...</p>';
 
-            const webAppUrl = "https://script.google.com/macros/s/AKfycbzSCTceSKo2rql-O3yh__uOXHa_HrbOhOGia59hqn_9VEuOubntxOD3eVMnv36f45VPRQ/exec";
+            // Replace with your deployed Apps Script Web App URL
+            const webAppUrl = "https://script.google.com/macros/s/AKfycbxlr8FObuIoolBUBzxcmPchMlLGDO77HoGpYoOXneQTg80v9R0dLkwYdT23PKDQOJrL1w/exec";
 
             fetch(`${webAppUrl}?userId=${encodeURIComponent(userId)}`)
                 .then(response => response.json())
@@ -83,12 +84,13 @@
                         document.getElementById('result').innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
                     } else {
                         document.getElementById('result').innerHTML = `
-                            <p>User ID "${data.userId}" has sent ${data.sentMessages} messages today.</p>
-                            <p style="color: green; font-weight: bold;">Remaining SMS balance: ${data.balance}</p>
+                            <p>User ID "<strong>${data.userId}</strong>" has sent <strong>${data.sentMessages}</strong> messages today.</p>
+                            <p style="color: green; font-weight: bold;">Remaining SMS balance: <strong>${data.balance}</strong></p>
                         `;
                     }
                 })
                 .catch(error => {
+                    console.error("Fetch error:", error);
                     document.getElementById('result').innerHTML = '<p style="color: red;">Failed to fetch data.</p>';
                 });
         }
