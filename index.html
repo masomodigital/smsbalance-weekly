@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Counter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>Message Counter</h3>
+        <form onsubmit="getMessageCount(); return false;">
+            <label for="userId"><strong>Enter User ID:</strong></label>
+            <input type="text" id="userId" required>
+            <button type="submit">Get Count</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function getMessageCount() {
+            const userId = document.getElementById('userId').value;
+            if (!userId) {
+                document.getElementById('result').innerHTML = '<p style="color: red;">Please enter a User ID.</p>';
+                return;
+            }
+
+            document.getElementById('result').innerHTML = '<p style="color: red; font-weight: bold;">Please wait...</p>';
+
+            const webAppUrl = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+
+            fetch(`${webAppUrl}?userId=${encodeURIComponent(userId)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('result').innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+                    } else {
+                        document.getElementById('result').innerHTML = `
+                            <p>User ID "${data.userId}" has sent ${data.sentMessages} messages today.</p>
+                            <p style="color: green; font-weight: bold;">Remaining SMS balance: ${data.balance}</p>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = '<p style="color: red;">Failed to fetch data.</p>';
+                });
+        }
+    </script>
+</body>
+</html>
